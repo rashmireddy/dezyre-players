@@ -41,7 +41,7 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 2. Untar apache-flume-1.5.2-bin.tar.gz
 3. mv apache-flume-1.5.2-bin to home directory
 4. generate flume-conf.properties file
-
+```
 <ol>
 5. run flume-ng agent with flume-conf.properties file being set
 </ol>
