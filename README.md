@@ -73,6 +73,7 @@ STORE smmd INTO '/user/rashmi/players/output';
 $brew install mysql
 $/usr/local/Cellar/mysql/5.6.19/bin/mysql.server start
 ```
+<ol>
 9. Create players and players_data table in mysql
 </ol>
 ```
