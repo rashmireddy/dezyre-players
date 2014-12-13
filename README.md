@@ -56,7 +56,7 @@ export JAVA_HOME=$(/usr/libexec/java_home)
 $ brew install pig
 ```
 <ol>
-7. Execute palyers.pig script
+7. Execute `players.pig` script
 </ol>
 ```
 players = LOAD '/user/rashmi/players/runs' USING PigStorage (',') as (player_id:int,year:int,country:chararray,opposition_team:chararray,runs_scored:int,balls_played:int);
