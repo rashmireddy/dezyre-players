@@ -1,0 +1,17 @@
+1.#export JAVA_HOME
+export JAVA_HOME="$(/usr/libexec/java_home)"
+
+2. #brew install pig
+Rashmis-MacBook-Pro:Cellar rashmi$ brew install pig
+==> Downloading http://www.apache.org/dyn/closer.cgi?path=pig/pig-0.13.0/pig-0.13.0.tar.gz
+==> Best Mirror http://mirror.metrocast.net/apache/pig/pig-0.13.0/pig-0.13.0.tar.gz
+######################################################################## 100.0%
+==> Patching
+patching file bin/pig
+Hunk #1 succeeded at 77 with fuzz 1 (offset 22 lines).
+==> Caveats
+You may need to set JAVA_HOME:
+  export JAVA_HOME="$(/usr/libexec/java_home)"
+==> Summary
+🍺  /usr/local/Cellar/pig/0.13.0: 9 files, 34M, built in 4.1 minutes
+

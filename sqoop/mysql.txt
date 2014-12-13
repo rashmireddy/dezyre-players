@@ -1,0 +1,39 @@
+#1. create database players
+mysql> create database players;
+Query OK, 1 row affected (0.00 sec)
+
+#2. use players
+mysql> use players;
+Database changed
+
+#3. grant all privileges on players.* to ''@localhost
+mysql> grant all privileges on players.* to ''@localhost ;
+Query OK, 0 rows affected (0.00 sec)
+
+#4. flush privileges
+mysql> flush privileges;
+Query OK, 0 rows affected (0.00 sec)
+
+#5. create table players_data(player_id INT(110), runs_scored BIGINT(20), balls_played BIGINT(20))
+mysql> create table players_data(player_id int(11), runs_scored BIGINT(20), balls_played BIGINT(20));
+Query OK, 0 rows affected (0.03 sec)
+
+#6. desc players_data
+mysql> desc players_data;
++--------------+------------+------+-----+---------+-------+
+| Field        | Type       | Null | Key | Default | Extra |
++--------------+------------+------+-----+---------+-------+
+| player_id    | int(11)    | YES  |     | NULL    |       |
+| runs_scored  | bigint(20) | YES  |     | NULL    |       |
+| balls_played | bigint(20) | YES  |     | NULL    |       |
++--------------+------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+7. select count(*) from players_data
+mysql> select count(*) from players_data;
++----------+
+| count(*) |
++----------+
+|        0 |
++----------+
+1 row in set (0.01 sec)

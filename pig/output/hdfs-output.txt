@@ -1,0 +1,13 @@
+Rashmis-MacBook-Pro:Documents rashmi$ hadoop fs -text /user/rashmi/players/output/part-r-00000
+14/12/12 10:44:10 WARN util.NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+1	14118	13619
+2	5412	5451
+3	19660	20026
+4	8926	9795
+5	6420	7014
+6	26028	24064
+7	15366	16816
+8	13785	12961
+9	14975	14475
+10	25023	24604
+

@@ -1,0 +1,248 @@
+# 1. DUMP smmd
+grunt>DUMP smmd;
+Input(s):
+Successfully read 100 records (5349 bytes) from: "/user/rashmi/players/runs"
+
+Output(s):
+Successfully stored 10 records (119 bytes) in: "hdfs://localhost:8020/tmp/temp-425956453/tmp-1318049160"
+
+Counters:
+Total records written : 10
+Total bytes written : 119
+Spillable Memory Manager spill count : 0
+Total bags proactively spilled: 0
+Total records proactively spilled: 0
+
+Job DAG:
+job_1418322400940_0022
+
+
+2014-12-12 10:29:47,836 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MapReduceLauncher - Success!
+2014-12-12 10:29:47,837 [main] INFO  org.apache.pig.data.SchemaTupleBackend - Key [pig.schematuple] was not set... will not generate code.
+2014-12-12 10:29:47,845 [main] INFO  org.apache.hadoop.mapreduce.lib.input.FileInputFormat - Total input paths to process : 1
+2014-12-12 10:29:47,846 [main] INFO  org.apache.pig.backend.hadoop.executionengine.util.MapRedUtil - Total input paths to process : 1
+(1,14118,13619)
+(2,5412,5451)
+(3,19660,20026)
+(4,8926,9795)
+(5,6420,7014)
+(6,26028,24064)
+(7,15366,16816)
+(8,13785,12961)
+(9,14975,14475)
+(10,25023,24604)
+
+#2.illustrate smmd
+grunt>illustrate smmd;
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+| players     | player_id:int      | year:int      | country:chararray      | opposition_team:chararray      | runs_scored:int      | balls_played:int      | 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+|             | 2                  | 2009          | Pakistan               | NewZealand                     | 1623                 | 1637                  | 
+|             | 2                  | 2011          | Australia              | NewZealand                     | 1320                 | 1196                  | 
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------
+| player_data     | player_id:int      | runs_scored:int      | balls_played:int      | 
+---------------------------------------------------------------------------------------
+|                 | 2                  | 1623                 | 1637                  | 
+|                 | 2                  | 1320                 | 1196                  | 
+---------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------------------------
+| grpd     | group:int      | player_data:bag{:tuple(player_id:int,runs_scored:int,balls_played:int)}                          | 
+--------------------------------------------------------------------------------------------------------------------------------
+|          | 2              | {(2, 1623, 1637), (2, 1320, 1196)}                                                               | 
+|          | 2              | {(2, 1623, 1637), (2, 1320, 1196)}                                                               | 
+--------------------------------------------------------------------------------------------------------------------------------
+-------------------------------------------------------
+| smmd     | group:int      | :long      | :long      | 
+-------------------------------------------------------
+|          | 2              | 2943       | 2833       | 
+-------------------------------------------------------
+
+#3. explain smmd
+grunt> explain smmd;   
+2014-12-12 10:32:42,016 [main] INFO  org.apache.pig.newplan.logical.optimizer.LogicalPlanOptimizer - {RULES_ENABLED=[AddForEach, ColumnMapKeyPrune, GroupByConstParallelSetter, LimitOptimizer, LoadTypeCastInserter, MergeFilter, MergeForEach, PartitionFilterOptimizer, PushDownForEachFlatten, PushUpFilter, SplitFilter, StreamTypeCastInserter], RULES_DISABLED=[FilterLogicExpressionSimplifier]}
+2014-12-12 10:32:42,018 [main] INFO  org.apache.pig.newplan.logical.rules.ColumnPruneVisitor - Columns pruned for players: $1, $2, $3
+#-----------------------------------------------
+# New Logical Plan:
+#-----------------------------------------------
+smmd: (Name: LOStore Schema: group#3045:int,#3069:long,#3072:long)ColumnPrune:InputUids=[3069, 3072, 3045]ColumnPrune:OutputUids=[3069, 3072, 3045]
+|
+|---smmd: (Name: LOForEach Schema: group#3045:int,#3069:long,#3072:long)ColumnPrune:InputUids=[3065, 3045]ColumnPrune:OutputUids=[3069, 3072, 3045]
+    |   |
+    |   (Name: LOGenerate[false,false,false] Schema: group#3045:int,#3069:long,#3072:long)ColumnPrune:InputUids=[3065, 3045]ColumnPrune:OutputUids=[3069, 3072, 3045]
+    |   |   |
+    |   |   group:(Name: Project Type: int Uid: 3045 Input: 0 Column: (*))
+    |   |   |
+    |   |   (Name: UserFunc(org.apache.pig.builtin.LongSum) Type: long Uid: 3069)
+    |   |   |
+    |   |   |---(Name: Dereference Type: bag Uid: 3068 Column:[1])
+    |   |       |
+    |   |       |---player_data:(Name: Project Type: bag Uid: 3065 Input: 1 Column: (*))
+    |   |   |
+    |   |   (Name: UserFunc(org.apache.pig.builtin.LongSum) Type: long Uid: 3072)
+    |   |   |
+    |   |   |---(Name: Dereference Type: bag Uid: 3071 Column:[2])
+    |   |       |
+    |   |       |---player_data:(Name: Project Type: bag Uid: 3065 Input: 2 Column: (*))
+    |   |
+    |   |---(Name: LOInnerLoad[0] Schema: group#3045:int)
+    |   |
+    |   |---player_data: (Name: LOInnerLoad[1] Schema: player_id#3045:int,runs_scored#3049:int,balls_played#3050:int)
+    |   |
+    |   |---player_data: (Name: LOInnerLoad[1] Schema: player_id#3045:int,runs_scored#3049:int,balls_played#3050:int)
+    |
+    |---grpd: (Name: LOCogroup Schema: group#3045:int,player_data#3065:bag{#3084:tuple(player_id#3045:int,runs_scored#3049:int,balls_played#3050:int)})ColumnPrune:InputUids=[3049, 3050, 3045]ColumnPrune:OutputUids=[3065, 3045]
+        |   |
+        |   player_id:(Name: Project Type: int Uid: 3045 Input: 0 Column: 0)
+        |
+        |---player_data: (Name: LOForEach Schema: player_id#3045:int,runs_scored#3049:int,balls_played#3050:int)
+            |   |
+            |   (Name: LOGenerate[false,false,false] Schema: player_id#3045:int,runs_scored#3049:int,balls_played#3050:int)
+            |   |   |
+            |   |   (Name: Cast Type: int Uid: 3045)
+            |   |   |
+            |   |   |---player_id:(Name: Project Type: bytearray Uid: 3045 Input: 0 Column: (*))
+            |   |   |
+            |   |   (Name: Cast Type: int Uid: 3049)
+            |   |   |
+            |   |   |---runs_scored:(Name: Project Type: bytearray Uid: 3049 Input: 1 Column: (*))
+            |   |   |
+            |   |   (Name: Cast Type: int Uid: 3050)
+            |   |   |
+            |   |   |---balls_played:(Name: Project Type: bytearray Uid: 3050 Input: 2 Column: (*))
+            |   |
+            |   |---(Name: LOInnerLoad[0] Schema: player_id#3045:bytearray)
+            |   |
+            |   |---(Name: LOInnerLoad[1] Schema: runs_scored#3049:bytearray)
+            |   |
+            |   |---(Name: LOInnerLoad[2] Schema: balls_played#3050:bytearray)
+            |
+            |---players: (Name: LOLoad Schema: player_id#3045:bytearray,runs_scored#3049:bytearray,balls_played#3050:bytearray)ColumnPrune:RequiredColumns=[0, 4, 5]ColumnPrune:InputUids=[3049, 3050, 3045]ColumnPrune:OutputUids=[3049, 3050, 3045]RequiredFields:[0, 4, 5]
+#-----------------------------------------------
+# Physical Plan:
+#-----------------------------------------------
+smmd: Store(fakefile:org.apache.pig.builtin.PigStorage) - scope-475
+|
+|---smmd: New For Each(false,false,false)[bag] - scope-474
+    |   |
+    |   Project[int][0] - scope-464
+    |   |
+    |   POUserFunc(org.apache.pig.builtin.LongSum)[long] - scope-468
+    |   |
+    |   |---Project[bag][1] - scope-467
+    |       |
+    |       |---Project[bag][1] - scope-466
+    |   |
+    |   POUserFunc(org.apache.pig.builtin.LongSum)[long] - scope-472
+    |   |
+    |   |---Project[bag][2] - scope-471
+    |       |
+    |       |---Project[bag][1] - scope-470
+    |
+    |---grpd: Package(Packager)[tuple]{int} - scope-461
+        |
+        |---grpd: Global Rearrange[tuple] - scope-460
+            |
+            |---grpd: Local Rearrange[tuple]{int}(false) - scope-462
+                |   |
+                |   Project[int][0] - scope-463
+                |
+                |---player_data: New For Each(false,false,false)[bag] - scope-459
+                    |   |
+                    |   Cast[int] - scope-451
+                    |   |
+                    |   |---Project[bytearray][0] - scope-450
+                    |   |
+                    |   Cast[int] - scope-454
+                    |   |
+                    |   |---Project[bytearray][1] - scope-453
+                    |   |
+                    |   Cast[int] - scope-457
+                    |   |
+                    |   |---Project[bytearray][2] - scope-456
+                    |
+                    |---players: Load(/user/rashmi/players/runs:PigStorage(',')) - scope-449
+
+2014-12-12 10:32:42,021 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MRCompiler - File concatenation threshold: 100 optimistic? false
+2014-12-12 10:32:42,022 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.CombinerOptimizer - Choosing to move algebraic foreach to combiner
+2014-12-12 10:32:42,024 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size before optimization: 1
+2014-12-12 10:32:42,024 [main] INFO  org.apache.pig.backend.hadoop.executionengine.mapReduceLayer.MultiQueryOptimizer - MR plan size after optimization: 1
+#--------------------------------------------------
+# Map Reduce Plan                                  
+#--------------------------------------------------
+MapReduce node scope-476
+Map Plan
+grpd: Local Rearrange[tuple]{int}(false) - scope-496
+|   |
+|   Project[int][0] - scope-497
+|
+|---smmd: New For Each(false,false,false)[bag] - scope-477
+    |   |
+    |   Project[int][0] - scope-478
+    |   |
+    |   POUserFunc(org.apache.pig.builtin.AlgebraicMathBase$Initial)[tuple] - scope-479
+    |   |
+    |   |---Project[bag][1] - scope-480
+    |       |
+    |       |---Project[bag][1] - scope-481
+    |   |
+    |   POUserFunc(org.apache.pig.builtin.AlgebraicMathBase$Initial)[tuple] - scope-482
+    |   |
+    |   |---Project[bag][2] - scope-483
+    |       |
+    |       |---Project[bag][1] - scope-484
+    |
+    |---Pre Combiner Local Rearrange[tuple]{Unknown} - scope-498
+        |
+        |---player_data: New For Each(false,false,false)[bag] - scope-459
+            |   |
+            |   Cast[int] - scope-451
+            |   |
+            |   |---Project[bytearray][0] - scope-450
+            |   |
+            |   Cast[int] - scope-454
+            |   |
+            |   |---Project[bytearray][1] - scope-453
+            |   |
+            |   Cast[int] - scope-457
+            |   |
+            |   |---Project[bytearray][2] - scope-456
+            |
+            |---players: Load(/user/rashmi/players/runs:PigStorage(',')) - scope-449--------
+Combine Plan
+grpd: Local Rearrange[tuple]{int}(false) - scope-500
+|   |
+|   Project[int][0] - scope-501
+|
+|---smmd: New For Each(false,false,false)[bag] - scope-485
+    |   |
+    |   Project[int][0] - scope-486
+    |   |
+    |   POUserFunc(org.apache.pig.builtin.LongSum$Intermediate)[tuple] - scope-487
+    |   |
+    |   |---Project[bag][1] - scope-488
+    |   |
+    |   POUserFunc(org.apache.pig.builtin.LongSum$Intermediate)[tuple] - scope-489
+    |   |
+    |   |---Project[bag][2] - scope-490
+    |
+    |---grpd: Package(CombinerPackager)[tuple]{int} - scope-494--------
+Reduce Plan
+smmd: Store(fakefile:org.apache.pig.builtin.PigStorage) - scope-475
+|
+|---smmd: New For Each(false,false,false)[bag] - scope-474
+    |   |
+    |   Project[int][0] - scope-464
+    |   |
+    |   POUserFunc(org.apache.pig.builtin.LongSum$Final)[long] - scope-468
+    |   |
+    |   |---Project[bag][1] - scope-491
+    |   |
+    |   POUserFunc(org.apache.pig.builtin.LongSum$Final)[long] - scope-472
+    |   |
+    |   |---Project[bag][2] - scope-492
+    |
+    |---grpd: Package(CombinerPackager)[tuple]{int} - scope-461--------
+Global sort: false
+----------------

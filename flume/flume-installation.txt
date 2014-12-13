@@ -1,0 +1,7 @@
+#set JAVA_HOME
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+1. Download Apache Flume tarball from http://flume.apache.org/ through one of the mirror sites
+2. Untar apache-flume-1.5.2-bin.tar.gz
+3. mv apache-flume-1.5.2-bin to home directory
+4. generate flume-conf.properties file
