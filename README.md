@@ -67,14 +67,13 @@ DUMP smmd;
 STORE smmd INTO '/user/rashmi/players/output';
 ```
 <ol>
-Install MySQL and start MySQL server
+8. Install MySQL and start MySQL server
 </ol>
 ```
 $brew install mysql
 $/usr/local/Cellar/mysql/5.6.19/bin/mysql.server start
-<ol>
 ```
-10. Create players and players_data table in mysql
+9. Create players and players_data table in mysql
 </ol>
 ```
 create database players;
@@ -85,7 +84,7 @@ create table players_data(player_id int(11), runs_scored BIGINT(20), balls_playe
 ```
 
 <ol>
-11. Run sqoop
+10. Run sqoop
 </ol>
 Export PIG output into MySQL
 ```
