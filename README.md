@@ -77,11 +77,11 @@ $/usr/local/Cellar/mysql/5.6.19/bin/mysql.server start
 9. Create players and players_data table in mysql
 </ol>
 ```
-create database players;
-use players;
-grant all privileges on players.* to ''@localhost ;
-flush privileges;
-create table players_data(player_id int(11), runs_scored BIGINT(20), balls_played BIGINT(20));
+mysql> create database players;
+mysql> use players;
+mysql> grant all privileges on players.* to ''@localhost ;
+mysql> flush privileges;
+mysql> create table players_data(player_id int(11),runs_scored BIGINT(20), balls_played BIGINT(20));
 ```
 
 <ol>
@@ -89,7 +89,7 @@ create table players_data(player_id int(11), runs_scored BIGINT(20), balls_playe
 </ol>
 Export PIG output into MySQL
 ```
+# NOTE: database players and table players_data should be created in mysql before executing the sqoop job
 $ sqoop export --connect jdbc:mysql://localhost/players --table players_data --export-dir /user/rashmi/players/output --username root --input-fields-terminated-by '\t' --input-lines-terminated-by '\n'
 
-NOTE: database players and table players_data should be created in mysql before executing the sqoop job
 ```
