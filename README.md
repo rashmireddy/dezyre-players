@@ -91,5 +91,11 @@ Export PIG output into MySQL
 ```
 # NOTE: database players and table players_data should be created in mysql before executing the sqoop job
 $ sqoop export --connect jdbc:mysql://localhost/players --table players_data --export-dir /user/rashmi/players/output --username root --input-fields-terminated-by '\t' --input-lines-terminated-by '\n'
-
+```
+<ol>
+Have automated the project using shell script
+</ol>
+```
+$ ./dezyre-players-flume.sh
+4 ./dezyre-players.sh
 ```
